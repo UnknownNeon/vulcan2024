@@ -63,9 +63,9 @@ namespace rae {
 	};
 
 	struct SwapChainSupportDetails {
-		VkSurfaceCapabilitiesKHR capabilities;
-		std::vector<VkSurfaceFormatKHR> formats;
-		std::vector<VkPresentModeKHR> presentModes;
+		VkSurfaceCapabilitiesKHR capabilities{};
+		std::vector<VkSurfaceFormatKHR> formats{};
+		std::vector<VkPresentModeKHR> presentModes{};
 	};
 
 	class window {
@@ -73,19 +73,22 @@ namespace rae {
 		GLFWwindow* win;
 		
 		bool enableValidationLayers = false;
-		const std::vector<const char*> validationLayers = {
+		//Validation Layer :
+		std::vector<const char*> validationLayers = {
 			"VK_LAYER_KHRONOS_validation"
 		};
-		const std::vector<const char*> deviceExtensions = {
+
+		//Logical Device Extensions :
+		std::vector<const char*> deviceExtensions = {
 			VK_KHR_SWAPCHAIN_EXTENSION_NAME
 		};
 
+		//Physical Device Extensions :
+		std::vector<const char*> extensions;
+
 		//Vulkan and Validation
 		VkInstance vulkan_instance;
-		VkInstanceCreateInfo createInfo;
-		VkApplicationInfo appInfo;
 		VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-		VkDebugUtilsMessengerCreateInfoEXT createDebugInfo{};
 		VkDebugUtilsMessengerEXT debugMessenger;
 
 		//Surface Rendering 
@@ -97,7 +100,7 @@ namespace rae {
 		VkDevice logicalDevice{};
 		rae::QueueFamilyIndices queue_indices;
 		VkPhysicalDeviceFeatures deviceFeatures{};
-		VkDeviceCreateInfo dCreateInfo{};
+
 
 		VkQueue presentQueue;
 		VkQueue graphicsQueue;
@@ -108,7 +111,6 @@ namespace rae {
 		std::vector<VkImageView> swapChainImageViews;
 		VkSwapchainKHR swapChain;
 		SwapChainSupportDetails swapChainSupport{};
-		VkSwapchainCreateInfoKHR swapCreateInfo{};
 		VkFormat swapChainImageFormat;
 		VkExtent2D swapChainExtent;
 
