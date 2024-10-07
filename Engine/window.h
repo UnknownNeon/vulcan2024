@@ -154,6 +154,7 @@ namespace rae {
 				VK_DYNAMIC_STATE_VIEWPORT,
 				VK_DYNAMIC_STATE_SCISSOR
 		};
+
 		VkPipelineShaderStageCreateInfo shaderStages[2];
 		VkShaderModule fragmentShaderModule;
 		VkShaderModule vertexShaderModule;
@@ -208,6 +209,7 @@ namespace rae {
 		//Vertex Buffers 
 		VkBuffer vertex_buffer;
 		VkDeviceMemory vertex_buffer_memory;
+
 		//Index Buffers 
 		VkBuffer index_buffer;
 		VkDeviceMemory index_buffer_memory;
