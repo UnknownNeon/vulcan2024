@@ -19,12 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\stb_image.cpp" />
     <ClCompile Include="Engine\window.cpp" />
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\math.hpp" />
     <ClInclude Include="Engine\util.hpp" />
     <ClInclude Include="Engine\window.h" />
     <ClInclude Include="src\application.h" />
