@@ -275,7 +275,7 @@ void rae::window::createLogicalDevice() //MAIN CALLING FUNC.
 	}
 	else {
 		this->createSwapChain();
-		this->createImageViews();
+		this->create_image_views();
 	}
 
 	
@@ -287,34 +287,6 @@ void rae::window::createLogicalDevice() //MAIN CALLING FUNC.
 	
 }
 
-
-void rae::window::createImageViews()
-{
-	swapChainImageViews.resize(swapChainImages.size());
-
-	std::cout << "Swap Chain Image Size : " << swapChainImages.size() << std::endl;
-
-	for (size_t i = 0; i < swapChainImages.size(); i++) {
-		VkImageViewCreateInfo createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-		createInfo.image = swapChainImages[i];
-		createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-		createInfo.format = swapChainImageFormat;
-		createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-		createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-		createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-		createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-		createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		createInfo.subresourceRange.baseMipLevel = 0;
-		createInfo.subresourceRange.levelCount = 1;
-		createInfo.subresourceRange.baseArrayLayer = 0;
-		createInfo.subresourceRange.layerCount = 1;
-
-		if (vkCreateImageView(this->logicalDevice, &createInfo, nullptr, &swapChainImageViews[i]) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create image views!");
-		}
-	}
-}
 
 rae::QueueFamilyIndices rae::window::findQueueFamily(VkPhysicalDevice device)
 {
@@ -476,6 +448,17 @@ rae::SwapChainSupportDetails rae::window::querySwapChainSupport(VkPhysicalDevice
 		vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, details.presentModes.data());
 	}
 	return details;
+}
+
+//Image views 
+
+void rae::window::create_image_views()
+{
+	swapChainImageViews.resize(swapChainImages.size());
+
+	for (uint32_t i = 0; i < swapChainImages.size(); i++) {
+		swapChainImageViews[i] = this->create_image_view(swapChainImages[i], swapChainImageFormat);
+	}
 }
 
 //render pass 
@@ -892,8 +875,9 @@ void rae::window::recreate_swap_chain()
 
 	clean_up_swapchain();
 
-	createSwapChain();
-	createImageViews();
+	this->createSwapChain();
+	this->create_image_views();
+
 	createFramebuffer();
 }
 
@@ -1122,6 +1106,33 @@ void rae::window::create_texture_image()
 	vkFreeMemory(this->logicalDevice, stagingBufferMemory, nullptr);
 
 	texture.~Texture2D();
+}
+
+VkImageView rae::window::create_image_view(VkImage image, VkFormat format)
+{
+	VkImageViewCreateInfo viewInfo{};
+	viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+	viewInfo.image = image;
+	viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+	viewInfo.format = format;
+	viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	viewInfo.subresourceRange.baseMipLevel = 0;
+	viewInfo.subresourceRange.levelCount = 1;
+	viewInfo.subresourceRange.baseArrayLayer = 0;
+	viewInfo.subresourceRange.layerCount = 1;
+
+	VkImageView imageView;
+	if (vkCreateImageView(this->logicalDevice, &viewInfo, nullptr, &imageView) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create texture image view!");
+	}
+
+	return imageView;
+}
+
+void rae::window::create_texture_image_views()
+{
+	this->textureImageView = this->create_image_view(textureImage, VK_FORMAT_R8G8B8A8_SRGB);
+
 }
 
 void rae::window::create_image(Texture2D& texture , VkImageTiling tiling_mode , VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& textureImage, VkDeviceMemory& textureImageMemory)
@@ -1372,6 +1383,7 @@ rae::window::~window()
 	clean_up_swapchain();
 
 	//deleting textures
+	vkDestroyImageView(this->logicalDevice, this->textureImageView, nullptr);
 
 	vkDestroyImage(this->logicalDevice, this->textureImage, nullptr);
 	vkFreeMemory(this->logicalDevice, this->textureImageMemory, nullptr);

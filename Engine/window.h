@@ -138,7 +138,8 @@ namespace rae {
 		//Surface and SWAP CHAIN 
 		void createSwapChain();
 		void create_surface(); //This can be Implemented natively . Sinc GLFW we dont need native code 
-		void createImageViews();
+		void create_image_views();
+
 		rae::SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 		VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 		VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
@@ -264,10 +265,18 @@ namespace rae {
 		
 
 		//Texture images:
+
+		VkImageView textureImageView;
+
 		VkImage textureImage;
 		VkDeviceMemory textureImageMemory;
 
 		void create_texture_image();
+		void create_texture_image_views();
+
+
+		VkImageView create_image_view(VkImage image, VkFormat format);
+
 		void create_image(Texture2D& texture , VkImageTiling tiling_mode , VkImageUsageFlags usage, 
 			VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
 
@@ -293,6 +302,7 @@ namespace rae {
 			this->create_command_pool();
 
 			this->create_texture_image();
+			this->create_texture_image_views();
 
 			this->create_vertex_buffers();
 			this->create_index_buffers();
