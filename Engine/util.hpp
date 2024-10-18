@@ -7,7 +7,6 @@
 #include <vector>
 #include <stdexcept>
 
-
 class utility {
 public:
 
@@ -15,7 +14,7 @@ public:
 	void compile_shaders(const std::string& _file_path_v , const std::string& _file_path_f) {
 
 		std::cout << "[Compiling Shaders Started]" << std::endl;
-		const std::string path_to_compiler = "C:\\VulkanSDK\\1.3.290.0\\Bin\\glslc.exe ";
+		const std::string path_to_compiler = "C:\\VulkanSDK\\1.3.290.0\\Bin\\glslc.exe ";						//hardcoded the path to sdk
 		std::string code_formatter = path_to_compiler + _file_path_v + " -o Dep/Shader/vert.spv";
 		std::system(code_formatter.c_str());
 		code_formatter = path_to_compiler + _file_path_f + " -o Dep/Shader/frag.spv";

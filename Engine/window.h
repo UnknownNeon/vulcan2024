@@ -18,9 +18,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-
-#include <stb_image.h>
-
+#include "Texture.hpp"
 #include <chrono>
 
 namespace rae {
@@ -70,6 +68,8 @@ namespace rae {
 		std::vector<VkSurfaceFormatKHR> formats{};
 		std::vector<VkPresentModeKHR> presentModes{};
 	};
+
+	//Begining of the main classs : 
 
 	class window {
 
@@ -188,6 +188,8 @@ namespace rae {
 
 		std::vector<VkCommandBuffer> command_buffers;
 		void create_command_buffers();
+		VkCommandBuffer begin_single_time_commands();
+		void end_single_time_commands(VkCommandBuffer commandBuffer);
 
 		//After the command pools have been created we can Write to the Command Buffers 
 
@@ -258,8 +260,20 @@ namespace rae {
 		std::vector<void*> uniformBuffersMapped;
 
 		//Own
-		std::vector<VkBuffer> vertexBuffers;
+		std::vector<VkBuffer> vertexBuffers; //Not yet used 
+		
 
+		//Texture images:
+		VkImage textureImage;
+		VkDeviceMemory textureImageMemory;
+
+		void create_texture_image();
+		void create_image(Texture2D& texture , VkImageTiling tiling_mode , VkImageUsageFlags usage, 
+			VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+
+		void transition_image_layout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+
+		void copy_buffer_to_image(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 	public:
 
 		inline void setResized() { this->isFrameBufferResized = true; } 
@@ -277,6 +291,9 @@ namespace rae {
 			this->continue_pipeline_creation();
 			this->createFramebuffer();
 			this->create_command_pool();
+
+			this->create_texture_image();
+
 			this->create_vertex_buffers();
 			this->create_index_buffers();
 			this->create_uniform_buffers();

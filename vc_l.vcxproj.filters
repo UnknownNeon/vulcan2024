@@ -38,6 +38,9 @@
     <ClInclude Include="src\application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Dep\Shader\simple_shader.vert" />
