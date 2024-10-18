@@ -73,6 +73,14 @@ namespace rae {
 
 	class window {
 
+		//Inplementing RAII 
+		//Copy constructors
+		window(const window&) = delete;
+		window& operator=(const window&) = delete;
+		window(const window&&) = delete;
+		window&& operator=(const window&&) = delete;
+
+
 		GLFWwindow* win;
 		
 		bool enableValidationLayers = false;
