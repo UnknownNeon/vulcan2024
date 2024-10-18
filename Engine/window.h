@@ -317,6 +317,7 @@ namespace rae {
 		void run();
 
 		bool WireframeMode = false;
+
 		inline bool isWindowClosed() { return glfwWindowShouldClose(win); };
 
 		window(int height, int width, const char* windowName);
